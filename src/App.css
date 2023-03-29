@@ -58,3 +58,10 @@ form input{
   border: 0;
   outline: none;
 }
+
+.inputSearch{
+  padding: 8px;
+  width: 100%;
+  outline: none;
+  margin: 5px;
+}
