@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ContactCard } from "../../components/ContactCard";
 import { ContactList } from "../../components/ContactList";
 import { getContacts } from "../../services/api";
@@ -11,27 +11,37 @@ export function Contacts() {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
 
-  const filteredContacts = ()=>{
-    
-  }
+  const filterContacts = (contact: Contact) => {
+    return contact.name.first.toLowerCase().includes(search.toLowerCase());
+  };
 
-  useEffect(() => {  
+  useEffect(() => {
     async function listContacts() {
-      setIsLoading(true)  
+      setIsLoading(true);
       setContacts(await getContacts());
-      setIsLoading(false)
+      setIsLoading(false);
     }
     listContacts();
   }, []);
   return (
     <BaseLayout appBarTitle='Agenda de Contatos'>
-      <TextField variant='outlined' fullWidth />
+      <TextField
+        fullWidth
+        variant='outlined'
+        label='Pesquisar'
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          setSearch(event.target.value);
+        }}
+        value={search}
+      />
       {isLoading ? (
         <CircularProgress />
       ) : (
         <ContactList>
-          {contacts.map((contact) => {
-            return <ContactCard key={contact.login.uuid} contactData={contact} />;
+          {contacts.filter(filterContacts).map((contact) => {
+            return (
+              <ContactCard key={contact.login.uuid} contactData={contact} />
+            );
           })}
         </ContactList>
       )}
